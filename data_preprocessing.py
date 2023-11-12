@@ -3,9 +3,10 @@ from sklearn.svm import LinearSVC
 from sklearn.feature_extraction.text import TfidfVectorizer
 from config import BOT_CONFIG
 import random
+from typing import Union
 
 # Функция для очистки фразы от ненужных символов
-def clear_phrase(phrase):
+def clear_phrase(phrase) -> str:
     phrase = phrase.lower()
     alphabet = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя- '
     result = ''.join(symbol for symbol in phrase if symbol in alphabet)
@@ -13,20 +14,20 @@ def clear_phrase(phrase):
 
 
 X_text = []
-y = []
+Y = []
 
 for intent, intent_data in BOT_CONFIG['intents'].items():
     for example in intent_data['examples']:
         X_text.append(example)
-        y.append(intent)
+        Y.append(intent)
 
 vectorizer = TfidfVectorizer(analyzer='char', ngram_range=(3, 3))
 X = vectorizer.fit_transform(X_text)
 clf = LinearSVC()
-clf.fit(X, y)
+clf.fit(X, Y)
 
 # Функция для классификации намерения по фразе
-def classify_intent(replica):
+def classify_intent(replica) -> Union[str, None]:
     replica = clear_phrase(replica)
 
     intent = clf.predict(vectorizer.transform([replica]))[0]
@@ -38,7 +39,7 @@ def classify_intent(replica):
             return intent
 
 # # Функция для получения ответа по намерению
-def get_answer_by_intent(intent):
+def get_answer_by_intent(intent) -> Union[str, None]:
     if intent in BOT_CONFIG['intents']:
         responses = BOT_CONFIG['intents'][intent]['responses']
         if responses:

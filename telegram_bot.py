@@ -23,12 +23,10 @@ def run_bot(update: Update, context: CallbackContext) -> None:
     print()
 
 
-with open('bot_token.txt', 'r') as file:
-    BOT_TOKEN = file.read().strip()
-
-
-def main():
+def main( ):
     """Start the bot."""
+    with open('bot_token.txt', 'r') as file:
+        BOT_TOKEN = file.read().strip()
     updater = Updater(BOT_TOKEN)
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler("start", start))

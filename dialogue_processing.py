@@ -2,6 +2,7 @@ import nltk
 from data_preprocessing import clear_phrase
 from config import BOT_CONFIG
 import random
+from typing import Union
 
 # Обработка диалогов из файла conversation.txt
 with open('conversation.txt', encoding='utf-8') as f:
@@ -41,7 +42,7 @@ for word, pairs in dialogues_structured.items():
     dialogues_structured_cut[word] = pairs[:1000]
 
 # Генерация ответа на основе входной фразы
-def generate_answer(replica):
+def generate_answer(replica) -> Union[str, None]:
     replica = clear_phrase(replica)
     words = set(replica.split(' '))
     mini_dataset = []
@@ -61,7 +62,7 @@ def generate_answer(replica):
     if answers:
         return min(answers, key=lambda three: three[0])[2]
 
-
-def get_failure_phrase():
+# Генерация ответа в случае неудачи
+def get_failure_phrase() -> str:
     failure_phrases = BOT_CONFIG['failure_phrases']
     return random.choice(failure_phrases)
